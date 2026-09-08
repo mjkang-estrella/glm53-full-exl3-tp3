@@ -37,6 +37,20 @@ def atomic_json(path: Path, value: object) -> None:
     os.replace(temporary, path)
 
 
+def atomic_text(path: Path, value: str) -> None:
+    """Replace metadata without writing through a hardlink to the K3 base."""
+    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(value)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
 def read_header(path: Path) -> tuple[int, dict]:
     with path.open("rb") as handle:
         prefix = handle.read(8)
@@ -128,6 +142,9 @@ def main() -> int:
     base_complete = json.loads((base / "ASSEMBLY_COMPLETE.json").read_text(encoding="utf-8"))
     if not (base_complete.get("passed") is True and base_complete.get("geometry_id") == GEOMETRY_ID and base_complete.get("layers") == 76 and base_complete.get("experts") == 19456):
         raise SystemExit("base checkpoint is not the sealed 3.0bpw K3 assembly")
+    if (sha256_file(base / "MANIFEST.json") != base_complete["manifest_sha256"]
+            or sha256_file(base / "SHA256SUMS") != base_complete["sha256sums_sha256"]):
+        raise SystemExit("base manifest/checksum ledger differs from sealed marker")
     selected = selection_map(args.selection)
     k2_receipts = {}
     for layer in ROUTED_LAYERS:
@@ -178,7 +195,7 @@ def main() -> int:
                 relative = str(path.relative_to(staging))
                 files[relative] = {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
         ledger = "".join(f"{row['sha256']}  {name}\n" for name, row in sorted(files.items()))
-        (staging / "SHA256SUMS").write_text(ledger, encoding="utf-8")
+        atomic_text(staging / "SHA256SUMS", ledger)
         manifest = {
             "schema": "glm53-full-exl3-tp3.k275-assembly-manifest.v1",
             "geometry_id": GEOMETRY_ID,
