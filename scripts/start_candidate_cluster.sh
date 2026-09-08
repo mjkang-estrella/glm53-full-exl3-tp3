@@ -77,7 +77,7 @@ for rank in 0 1 2; do
         "test -s '/home/mj-kang/Dev/models/$replica_basename/ASSEMBLY_COMPLETE.json'; \
          ! docker ps --format '{{.Names}}' | grep -Eq '^glm53-tp3-k3-uneven-L[0-9][0-9][0-9]$'; \
          ! docker inspect 'glm53-k3-candidate-rank$rank' >/dev/null 2>&1"
-    rsync -a --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
 done
 
 python3 "$project/scripts/kernel_audit.py" --since "$started" \

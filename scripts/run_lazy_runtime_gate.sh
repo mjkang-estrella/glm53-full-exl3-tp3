@@ -38,7 +38,7 @@ for rank in 0 1 2; do
     available=$(ssh -F zima-ssh-config "$node" "awk '/MemAvailable:/ {print \$2*1024}' /proc/meminfo")
     (( available >= 12 * 1024 * 1024 * 1024 ))
     ssh -F zima-ssh-config "$node" "! docker ps --format '{{.Names}}' | grep -Eq '^(glm53-k3-|glm53-tp3-k3-uneven|glm53-lazy-runtime-gate)'; test -s /home/mj-kang/Dev/models/GLM-5.3-EXL3-TR3-3.0bpw-TP3-K3-rotating-uneven-v1-assembled-20260906T034145Z/ASSEMBLY_COMPLETE.json"
-    rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" "$node:/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/"
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" "$node:/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/"
 done
 python3 scripts/kernel_audit.py --since "$started" --output "$central/preflight-kernel-audit.json"
 

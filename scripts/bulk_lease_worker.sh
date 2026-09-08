@@ -98,7 +98,7 @@ test ! -e "$result"
 test -w /mnt/unas-models/ZAI
 test -s "$source_inventory"
 write_progress syncing_project
-rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" "$node:$project/"
+rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" "$node:$project/"
 rsync -a "$source_inventory" -e "ssh -F zima-ssh-config" \
     "$node:$state_root/source-inventory.json"
 write_progress staging_source

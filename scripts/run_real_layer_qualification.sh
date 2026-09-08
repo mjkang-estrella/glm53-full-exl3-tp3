@@ -23,7 +23,7 @@ ssh -F zima-ssh-config "$node" \
     "test -s '$state_root/rollback/$rollback_stamp/$node/containers/minimax-h3-comfy.inspect.json'"
 
 mkdir -p "$central/remote-layer" "$central/rotation-experts" "$central/logs" "$central/worker-state"
-rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
+rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
     "$node:$project/"
 ssh -F zima-ssh-config "$node" "mkdir -p '$state_root' '$remote_state'"
 rsync -a "$source_inventory" -e "ssh -F zima-ssh-config" \

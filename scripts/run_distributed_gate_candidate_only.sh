@@ -30,7 +30,7 @@ for rank in 0 1 2; do
     [[ "$running" == false ]]
     available=$(ssh -F zima-ssh-config "$node" "awk '/MemAvailable:/ {print \$2*1024}' /proc/meminfo")
     (( available >= 12 * 1024 * 1024 * 1024 ))
-    rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
         "$node:/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/"
 done
 

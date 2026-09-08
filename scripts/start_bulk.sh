@@ -77,7 +77,7 @@ mv "$baseline_tmp" "$state/service-baseline.json"
 
 # Freeze the exact project sent to all nodes before changing service state.
 for node in "${nodes[@]}"; do
-    rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
         "$node:$project/"
 done
 transition_start=$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)

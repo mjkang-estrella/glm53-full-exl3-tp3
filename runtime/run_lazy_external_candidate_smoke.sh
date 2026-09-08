@@ -123,7 +123,7 @@ for rank in 0 1 2; do
                --rank-pack-dir '/home/mj-kang/Dev/cache/glm53-full-exl3-tp3/rank-packs/$rank_pack_basename/rank-$rank' \
                --output '$remote_preflight/prelaunch-page-cache.json'"
     fi
-    rsync -a --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
 done
 python3 scripts/kernel_audit.py --since "$started" --output "$state/prelaunch-kernel-audit.json"
 

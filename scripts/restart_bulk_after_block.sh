@@ -106,7 +106,7 @@ test -s "$state_root/rollback/$rollback_stamp/mj-zima/ARTIFACT_SHA256SUMS"
 
 # Freeze the corrected recovery scripts on every worker before reconciliation.
 for node in "${nodes[@]}"; do
-    rsync -a --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ ./ -e "ssh -F zima-ssh-config" \
         "$node:$project/"
 done
 

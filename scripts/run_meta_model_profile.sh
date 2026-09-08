@@ -73,7 +73,7 @@ for rank in 0 1 2; do
     available=$(ssh -F zima-ssh-config "$node" "awk '/MemAvailable:/ {print \$2*1024}' /proc/meminfo")
     (( available >= 12 * 1024 * 1024 * 1024 ))
     ssh -F zima-ssh-config "$node" "test -s '/home/mj-kang/Dev/models/$replica_basename/ASSEMBLY_COMPLETE.json'; ! docker ps --format '{{.Names}}' | grep -Eq '^(glm53-k3-|glm53-tp3-k3-uneven)'; ! docker inspect '$prefix-rank$rank' >/dev/null 2>&1"
-    rsync -a --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
+    rsync -a --exclude .git/ --exclude .venv/ --exclude __pycache__/ --exclude outputs/ --exclude logs/ --exclude state/ "$project/" -e "ssh -F zima-ssh-config" "$node:$project/"
 done
 python3 scripts/kernel_audit.py --since "$started" --output "$state/prelaunch-kernel-audit.json"
 
