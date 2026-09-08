@@ -13,11 +13,14 @@ All routed experts remain resident in RAM across three Sparks. The selected prof
 | [Commit map](docs/COMMITS.md) | Separate retrospective commits for each improvement |
 | [Validation](docs/VALIDATION.md) | Packaging checks and isolated CPU test results |
 | [Public source scope](docs/PUBLICATION.md) | Publication boundaries and history audit |
+| [Hugging Face upload and restore](integrations/huggingface/README.md) | Zima-hosted resumable publication of both sealed checkpoints |
 | [Agent instructions](AGENTS.md) | Current operational boundaries |
 | [Machine-readable results](results/speed-results.json) | Per-run measurements and selection eligibility |
 
 The last qualified attempt is `speed-qualified-final`; its endpoint is `http://192.168.0.238:8893`. The legacy API alias `GLM-5.3-K3-TP3-CANDIDATE` serves **K275**, not K3. The authenticated [AI site](https://ai.mj-kang.com) now routes to this service as `GLM-5.3 K275 (32K)`. See the [LibreChat integration](integrations/librechat/README.md). Recheck live state before acting; Flash/H3 remain stopped.
 
 This is a reproduction bundle for the existing provisioned homelab, not a clean-OS installer. Images, checkpoints, rank packs, credentials, and raw benchmark/capture output are external. See the dependency inventory before launching anything.
+
+Model repositories: [K3 / 3.0 bpw](https://huggingface.co/mj-kang/GLM-5.3-EXL3-3.0bpw-TP3) and [K2.75 / 2.75 bpw](https://huggingface.co/mj-kang/GLM-5.3-EXL3-2.75bpw-TP3). Each upload is incomplete until its `UPLOAD_COMPLETE.json` exists. Read the model card and restore instructions; the Hub transport layout is not directly loadable by a stock runtime.
 
 Git history was created retrospectively on September 8, 2026. It is not the original experiment timeline. Earlier commits are historical snapshots, not independently qualified deployments. Public publication and the subsequent web-route cutover were separately authorized and recorded after the original ten-commit wrap-up.
