@@ -16,8 +16,8 @@ All routed experts remain resident in RAM across three Sparks. The selected prof
 | [Agent instructions](AGENTS.md) | Current operational boundaries |
 | [Machine-readable results](results/speed-results.json) | Per-run measurements and selection eligibility |
 
-The last qualified attempt is `speed-qualified-final`; its endpoint is `http://192.168.0.238:8893`. The legacy API alias `GLM-5.3-K3-TP3-CANDIDATE` serves **K275**, not K3. Recheck live state before acting. Public routes were not promoted and Flash/H3 remain stopped.
+The last qualified attempt is `speed-qualified-final`; its endpoint is `http://192.168.0.238:8893`. The legacy API alias `GLM-5.3-K3-TP3-CANDIDATE` serves **K275**, not K3. The authenticated [AI site](https://ai.mj-kang.com) now routes to this service as `GLM-5.3 K275 (32K)`. See the [LibreChat integration](integrations/librechat/README.md). Recheck live state before acting; Flash/H3 remain stopped.
 
 This is a reproduction bundle for the existing provisioned homelab, not a clean-OS installer. Images, checkpoints, rank packs, credentials, and raw benchmark/capture output are external. See the dependency inventory before launching anything.
 
-Git history was created retrospectively on September 8, 2026. It is not the original experiment timeline. Earlier commits are historical snapshots, not independently qualified deployments. No public push is required.
+Git history was created retrospectively on September 8, 2026. It is not the original experiment timeline. Earlier commits are historical snapshots, not independently qualified deployments. Public publication and the subsequent web-route cutover were separately authorized and recorded after the original ten-commit wrap-up.

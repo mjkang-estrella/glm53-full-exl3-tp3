@@ -29,4 +29,4 @@ To restore source into a new, empty directory:
 git clone /mnt/unas-models/ZAI/GLM-5.3-EXL3-reproduction-20260908/glm53-reproduction.bundle NEW_EMPTY_DIRECTORY
 ```
 
-Then read README.md and the dependency inventory. A source clone alone is not permission to start a model or encode. No public remote or push was added.
+Then read README.md and the dependency inventory. A source clone alone is not permission to start a model or encode. The original wrap-up added no public remote; the operator subsequently authorized publication at `https://github.com/mjkang-estrella/glm53-full-exl3-tp3` and the web-route cutover. The private NAS bundle remains the immutable original ten-commit snapshot; GitHub includes the later changes.

@@ -1,5 +1,7 @@
 # Current serving profile, September 8
 
+Public-route update after the original qualification: authenticated `https://ai.mj-kang.com` now uses this K275 service, labeled `GLM-5.3 K275 (32K)`. See `integrations/librechat/README.md` for the mapping, compatibility fix and rollback. The earlier qualification notes below describe the pre-cutover state.
+
 The original K275 checkpoint is running on all three Sparks as attempt `speed-qualified-final`, endpoint `http://192.168.0.238:8893`. The API name remains the legacy `GLM-5.3-K3-TP3-CANDIDATE`; the mounted weights are K275, not K3.
 
 - TP3/DCP3, one sequence, 32,768-token limit, interleave 1.
