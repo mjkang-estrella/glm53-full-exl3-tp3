@@ -1,0 +1,32 @@
+--- a/local-adapters/deepseek_reasoning_adapter.py
++++ b/local-adapters/deepseek_reasoning_adapter.py
+@@ -358,6 +358,8 @@
+         return payload
+     for choice in payload.get("choices", []):
+         message = choice.get("message", {}) if isinstance(choice, dict) else {}
++        if message.get("tool_calls") and choice.get("finish_reason") == "stop":
++            choice["finish_reason"] = "tool_calls"
+         for tool_call in message.get("tool_calls", []):
+             function = tool_call.get("function", {}) if isinstance(tool_call, dict) else {}
+             name = function.get("name")
+@@ -491,13 +493,20 @@
+                 had_tool_calls = True
+                 self._collect(int(choice.get("index", 0)), calls)
+                 del delta["tool_calls"]
++            if choice.get("finish_reason") == "stop" and any(
++                key[0] == int(choice.get("index", 0)) for key in self.pending
++            ):
++                choice["finish_reason"] = "tool_calls"
+             if choice.get("finish_reason") == "tool_calls":
+                 should_flush = True
+ 
+         output: list[bytes] = []
+         if should_flush and self.pending:
+             output.extend(self._flush_payloads(payload))
+-        if not had_tool_calls or any(choice.get("delta") for choice in payload.get("choices", [])):
++        if not had_tool_calls or any(
++            choice.get("delta") or choice.get("finish_reason") is not None
++            for choice in payload.get("choices", [])
++        ):
+             output.append(self._sse(payload))
+         return output
