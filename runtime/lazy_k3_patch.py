@@ -469,7 +469,10 @@ class LazyExpertStore:
         over experts selected by later single-request batches.
         """
 
-        if self.policy != "lfu":
+        # A fully resident store never evicts. Frequency bookkeeping would
+        # only synchronize every layer's CUDA routing IDs to the host, and
+        # its dynamic boolean indexing is illegal during CUDA graph capture.
+        if self.policy != "lfu" or _execution_mode() in {"resident_fused", "resident_uva"}:
             return
         flat = ids.detach().reshape(-1).to(dtype=torch.long)
         flat = flat[(flat >= 0) & (flat < EXPERTS)]
