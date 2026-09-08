@@ -12,6 +12,7 @@ All routed experts remain resident in RAM across three Sparks. The selected prof
 | [Dependencies](docs/DEPENDENCIES.md) | Exact image, checkpoints, encoder, and external evidence |
 | [Commit map](docs/COMMITS.md) | Separate retrospective commits for each improvement |
 | [Validation](docs/VALIDATION.md) | Packaging checks and isolated CPU test results |
+| [Public source scope](docs/PUBLICATION.md) | Publication boundaries and history audit |
 | [Agent instructions](AGENTS.md) | Current operational boundaries |
 | [Machine-readable results](results/speed-results.json) | Per-run measurements and selection eligibility |
 
