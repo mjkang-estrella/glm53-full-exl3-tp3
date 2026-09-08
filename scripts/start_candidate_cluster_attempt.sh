@@ -20,6 +20,10 @@ watchdog_reserve_gib=${GLM53_WATCHDOG_RESERVE_GIB:-8}
 uva_resident=${GLM53_LAZY_K3_UVA:-0}
 max_num_batched_tokens=${GLM53_LAZY_MAX_NUM_BATCHED_TOKENS:-1024}
 enforce_eager=${GLM53_ENFORCE_EAGER:-1}
+graph_mode=${GLM53_CUDA_GRAPH_MODE:-}
+[[ -z "$graph_mode" || "$graph_mode" == FULL_DECODE_ONLY ]] || { echo "unsupported CUDA graph mode" >&2; exit 2; }
+spinwait_ms=${GLM53_SPINWAIT_MS:-stock}
+[[ "$spinwait_ms" == stock || "$spinwait_ms" == 16 ]] || { echo "unsupported experiment spin window" >&2; exit 2; }
 spec_method=${GLM53_SPEC_METHOD:-}
 spec_tokens=${GLM53_SPEC_TOKENS:-}
 spec_draft_tp=${GLM53_SPEC_DRAFT_TP:-}
@@ -240,7 +244,7 @@ docker run -d --name '$container_prefix-rank$rank' --gpus all --network host --i
  -e GLM53_LAZY_K3_ARENA_BLOCK_SLOTS='$arena_block_slots' \
  -e GLM53_LAZY_K3_EXECUTION='$lazy_execution' -e GLM53_LAZY_K3_UVA='$uva_resident' \
  -e GLM53_RESIDENT_MIN_AVAILABLE_BYTES='$resident_min_available_bytes' -e VLLM_ENABLE_V1_MULTIPROCESSING=0 \
- -e ENFORCE_EAGER='$enforce_eager' -e SPEC_METHOD='$spec_method' -e SPEC_TOKENS='$spec_tokens' -e SPEC_DRAFT_TP='$spec_draft_tp' -e DCP_SIZE='$dcp_size' -e CP_KV_INTERLEAVE_SIZE='$cp_kv_interleave_size' \
+ -e ENFORCE_EAGER='$enforce_eager' -e CUDA_GRAPH_MODE='$graph_mode' -e GLM53_SPINWAIT_MS='$spinwait_ms' -e SPEC_METHOD='$spec_method' -e SPEC_TOKENS='$spec_tokens' -e SPEC_DRAFT_TP='$spec_draft_tp' -e DCP_SIZE='$dcp_size' -e CP_KV_INTERLEAVE_SIZE='$cp_kv_interleave_size' \
  -e VLLM_EXECUTE_MODEL_TIMEOUT_SECONDS='$execute_model_timeout_seconds' \
  -e KV_CACHE_MEMORY_BYTES='$kv_cache_memory_bytes' \
  $rank_pack_docker_args \

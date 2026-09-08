@@ -6,6 +6,14 @@ for name in "${required[@]}"; do
     if [[ -z "${!name:-}" ]]; then echo "missing required environment: $name" >&2; exit 2; fi
 done
 enforce_eager=${ENFORCE_EAGER:-1}
+graph_mode=${CUDA_GRAPH_MODE:-}
+[[ -z "$graph_mode" || "$graph_mode" == FULL_DECODE_ONLY ]] || { echo "unsupported graph mode" >&2; exit 2; }
+if [[ "${GLM53_SPINWAIT_MS:-stock}" != stock ]]; then
+    # Use the image's source-validated patch before the serving interpreter
+    # imports vLLM. -S avoids the experiment's sitecustomize in this helper.
+    python3 -S /opt/glm53/patch_spinwait.py --preflight
+    python3 -S /opt/glm53/patch_spinwait.py
+fi
 spec_method=${SPEC_METHOD:-}
 spec_tokens=${SPEC_TOKENS:-}
 spec_draft_tp=${SPEC_DRAFT_TP:-}
@@ -53,6 +61,10 @@ args=(
     --no-enable-prefix-caching
 )
 if [[ "$enforce_eager" == 1 ]]; then args+=(--enforce-eager); fi
+if [[ -n "$graph_mode" ]]; then
+    [[ "$enforce_eager" == 0 ]] || { echo "graph mode requires graphs enabled" >&2; exit 2; }
+    args+=(--compilation-config "{\"cudagraph_mode\":\"$graph_mode\"}")
+fi
 if [[ -n "$spec_draft_tp" ]]; then
     args+=(--speculative-config "{\"method\":\"$spec_method\",\"num_speculative_tokens\":$spec_tokens,\"draft_tensor_parallel_size\":$spec_draft_tp}")
 elif [[ -n "$spec_method" ]]; then
