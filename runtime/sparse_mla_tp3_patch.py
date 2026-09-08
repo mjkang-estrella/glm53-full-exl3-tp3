@@ -149,9 +149,11 @@ def apply_patches() -> None:
 
     original_correct_attn_out = dcp_common.correct_attn_out
     if not getattr(original_correct_attn_out, "_glm53_dcp_lse_pad", False):
+        lse_pad_reported = False
 
         @wraps(original_correct_attn_out)
         def correct_attn_out(*args, **kwargs):
+            nonlocal lse_pad_reported
             if len(args) >= 2:
                 lses = args[1]
                 arg_prefix = args[:1]
@@ -172,11 +174,13 @@ def apply_patches() -> None:
                     else:
                         kwargs = dict(kwargs)
                         kwargs["lses"] = lses
-                    print(
-                        "GLM53_DCP_LSE_ARANGE_PAD_APPLIED "
-                        f"ranks={count}->{rounded}",
-                        flush=True,
-                    )
+                    if not lse_pad_reported:
+                        print(
+                            "GLM53_DCP_LSE_ARANGE_PAD_APPLIED "
+                            f"ranks={count}->{rounded}",
+                            flush=True,
+                        )
+                        lse_pad_reported = True
             return original_correct_attn_out(*args, **kwargs)
 
         correct_attn_out._glm53_dcp_lse_pad = True
