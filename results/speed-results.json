@@ -1,0 +1,734 @@
+{
+  "loaded": "speed-qualified-final",
+  "phase": "complete",
+  "rows": [
+    {
+      "accepted": true,
+      "attempt": "k275-post-reencode-v1",
+      "config": {
+        "buffer": 524288,
+        "channels": 1,
+        "eager": 1,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "baseline",
+      "pp": {
+        "mean": 88.19401007991439,
+        "std": 1.7525632333756356,
+        "values": [
+          85.84077412451425,
+          88.69688683568349,
+          90.04436927954546
+        ]
+      },
+      "tg": {
+        "mean": 5.120950515041647,
+        "std": 0.00745677632095011,
+        "values": [
+          5.118044758665364,
+          5.131182499366651,
+          5.113624287092927
+        ]
+      },
+      "ttfr": {
+        "mean": 23601.496384323884,
+        "std": 465.48842341651266,
+        "values": [
+          24228.84119907394,
+          23460.589919937775,
+          23115.05803395994
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-hotpath-eager",
+      "completed_at": "2026-09-08T05:27:21.850+00:00",
+      "config": {
+        "buffer": 524288,
+        "channels": 1,
+        "eager": 1,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "hotpath-eager",
+      "pp": {
+        "mean": 136.3874239264473,
+        "std": 0.4337153948236593,
+        "values": [
+          136.2232029152566,
+          135.95773646392124,
+          136.98133240016404
+        ]
+      },
+      "started_at": "2026-09-08T05:19:28.540+00:00",
+      "tg": {
+        "mean": 6.731017151808099,
+        "std": 0.05514644860654392,
+        "values": [
+          6.76697231622844,
+          6.653105307239065,
+          6.77297383195679
+        ]
+      },
+      "ttfr": {
+        "mean": 15648.818021678986,
+        "std": 47.67418104669243,
+        "values": [
+          15666.768696042709,
+          15696.123864967376,
+          15583.561504026875
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-hotpath-graphs",
+      "completed_at": "2026-09-08T05:37:35.947+00:00",
+      "config": {
+        "buffer": 524288,
+        "channels": 1,
+        "eager": 0,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "hotpath-graphs",
+      "pp": {
+        "mean": 116.41440297716547,
+        "std": 16.091317393866653,
+        "values": [
+          136.56420985165013,
+          115.49835893375379,
+          97.18064014609243
+        ]
+      },
+      "started_at": "2026-09-08T05:27:54.914+00:00",
+      "tg": {
+        "mean": 5.935380786416734,
+        "std": 0.578927759106775,
+        "values": [
+          5.132514553704288,
+          6.197924073504639,
+          6.475703732041273
+        ]
+      },
+      "ttfr": {
+        "mean": 18581.828979658894,
+        "std": 2485.270811436927,
+        "values": [
+          15644.231369020417,
+          18379.476469941437,
+          21721.779100014828
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-nccl2",
+      "completed_at": "2026-09-08T05:45:49.973+00:00",
+      "config": {
+        "buffer": 262144,
+        "channels": 2,
+        "eager": 1,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "nccl2",
+      "pp": {
+        "mean": 143.03066183588774,
+        "std": 0.7199612314666688,
+        "values": [
+          143.86046686566146,
+          143.1267230884484,
+          142.10479555355334
+        ]
+      },
+      "started_at": "2026-09-08T05:38:13.371+00:00",
+      "tg": {
+        "mean": 6.7084014920861295,
+        "std": 0.06395962328217084,
+        "values": [
+          6.7586570123622,
+          6.6181428089780345,
+          6.748404654918156
+        ]
+      },
+      "ttfr": {
+        "mean": 14673.050970692808,
+        "std": 72.14926710465889,
+        "values": [
+          14590.096292085946,
+          14663.077692035586,
+          14765.978927956894
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-nccl4",
+      "completed_at": "2026-09-08T05:53:55.644+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "nccl4",
+      "pp": {
+        "mean": 147.84189684533962,
+        "std": 0.18404475140854198,
+        "values": [
+          148.03497654825486,
+          147.89651544393746,
+          147.59419854382654
+        ]
+      },
+      "started_at": "2026-09-08T05:46:23.937+00:00",
+      "tg": {
+        "mean": 6.746860319694233,
+        "std": 0.026835847411663838,
+        "values": [
+          6.711587929414962,
+          6.776626556979023,
+          6.752366472688715
+        ]
+      },
+      "ttfr": {
+        "mean": 14197.239471289018,
+        "std": 17.25384667651312,
+        "values": [
+          14179.150215932168,
+          14192.102174973115,
+          14220.466022961773
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-nccl8",
+      "completed_at": "2026-09-08T06:02:04.805+00:00",
+      "config": {
+        "buffer": 2097152,
+        "channels": 8,
+        "eager": 1,
+        "mtp": 0,
+        "prefill": 128
+      },
+      "label": "nccl8",
+      "pp": {
+        "mean": 146.6693304691141,
+        "std": 0.33810521927710435,
+        "values": [
+          147.14213219680775,
+          146.37115093847154,
+          146.49470827206304
+        ]
+      },
+      "started_at": "2026-09-08T05:54:29.657+00:00",
+      "tg": {
+        "mean": 6.697842349364868,
+        "std": 0.043848780609547104,
+        "values": [
+          6.697018189792471,
+          6.644555603166082,
+          6.751953255136052
+        ]
+      },
+      "ttfr": {
+        "mean": 14308.790154328259,
+        "std": 32.14168458359831,
+        "values": [
+          14263.848479953595,
+          14337.16152200941,
+          14325.360461021774
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-mtp1",
+      "completed_at": "2026-09-08T06:09:11.248+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 1,
+        "prefill": 128
+      },
+      "label": "mtp1",
+      "pp": {
+        "mean": 145.89664054100385,
+        "std": 0.6257608937496899,
+        "values": [
+          146.65012034738695,
+          145.1179476800557,
+          145.92185359556888
+        ]
+      },
+      "started_at": "2026-09-08T06:02:37.713+00:00",
+      "tg": {
+        "mean": 10.520431704956884,
+        "std": 0.29122933389307254,
+        "values": [
+          10.931789185623018,
+          10.332375527000286,
+          10.297130402247348
+        ]
+      },
+      "ttfr": {
+        "mean": 14396.391554386355,
+        "std": 60.22463793130298,
+        "values": [
+          14324.010236072354,
+          14471.456615021452,
+          14393.707812065259
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-mtp2",
+      "completed_at": "2026-09-08T06:16:19.776+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 2,
+        "prefill": 128
+      },
+      "label": "mtp2",
+      "pp": {
+        "mean": 144.82841694934473,
+        "std": 1.5536859759496697,
+        "values": [
+          146.82931617737955,
+          144.61423184376662,
+          143.04170282688804
+        ]
+      },
+      "started_at": "2026-09-08T06:09:43.242+00:00",
+      "tg": {
+        "mean": 12.203341045167242,
+        "std": 0.935301464924502,
+        "values": [
+          13.477728193878082,
+          11.872963852114012,
+          11.259331089509633
+        ]
+      },
+      "ttfr": {
+        "mean": 14510.603579653738,
+        "std": 151.39786660296153,
+        "values": [
+          14316.276401979849,
+          14529.923208989203,
+          14685.61112799216
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-mtp3",
+      "completed_at": "2026-09-08T06:23:08.777+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 3,
+        "prefill": 128
+      },
+      "label": "mtp3",
+      "pp": {
+        "mean": 143.61971697335932,
+        "std": 1.35206070621197,
+        "values": [
+          145.08221678510444,
+          141.82173235097673,
+          143.9552017839968
+        ]
+      },
+      "started_at": "2026-09-08T06:16:52.080+00:00",
+      "tg": {
+        "mean": 12.990640730438026,
+        "std": 0.4533810102783594,
+        "values": [
+          13.086423177873552,
+          13.491794862582584,
+          12.393704150857939
+        ]
+      },
+      "ttfr": {
+        "mean": 14646.46653799961,
+        "std": 134.71619724336713,
+        "values": [
+          14501.451737014577,
+          14825.981935020536,
+          14611.965941963717
+        ]
+      }
+    },
+    {
+      "accepted": false,
+      "attempt": "speed-prefill256",
+      "completed_at": "2026-09-08T06:27:54.758+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 3,
+        "prefill": 256
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "error": "CalledProcessError(1, ['ssh', '-F', '/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/zima-ssh-config', 'mj-spark-1', 'bash /home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/scripts/run_speed_bench.sh prefill256'])",
+      "label": "prefill256",
+      "started_at": "2026-09-08T06:23:43.342+00:00"
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-winner-confirm",
+      "completed_at": "2026-09-08T06:34:46.189+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "mtp": 3,
+        "prefill": 128
+      },
+      "label": "winner-confirm",
+      "pp": {
+        "mean": 143.77197023632968,
+        "std": 0.31491693533545423,
+        "values": [
+          143.34491250155307,
+          143.87606746927335,
+          144.0949307381626
+        ]
+      },
+      "started_at": "2026-09-08T06:28:29.126+00:00",
+      "tg": {
+        "mean": 12.377459051807785,
+        "std": 0.6634293637733943,
+        "values": [
+          12.833448735366469,
+          12.859578875023608,
+          11.439349545033279
+        ]
+      },
+      "ttfr": {
+        "mean": 14630.41963102296,
+        "std": 31.233312152203453,
+        "values": [
+          14672.789718955755,
+          14620.044833049178,
+          14598.424341063946
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-kv1g",
+      "completed_at": "2026-09-08T06:41:52.173+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 128,
+        "spinwait_ms": "stock"
+      },
+      "label": "kv1g",
+      "pp": {
+        "mean": 142.5908397902145,
+        "std": 0.5290753372513485,
+        "values": [
+          142.2130039007329,
+          142.2204625542178,
+          143.33905291569278
+        ]
+      },
+      "started_at": "2026-09-08T06:35:30.097+00:00",
+      "tg": {
+        "mean": 12.950437421889061,
+        "std": 0.6823484700971999,
+        "values": [
+          12.79660093258198,
+          12.202340574023538,
+          13.852370759061664
+        ]
+      },
+      "ttfr": {
+        "mean": 14752.53019897112,
+        "std": 53.15356436792264,
+        "values": [
+          14790.492435917258,
+          14789.737188955769,
+          14677.360972040333
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-prefill256-kv1g",
+      "completed_at": "2026-09-08T06:48:35.475+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 256,
+        "spinwait_ms": "stock"
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "label": "prefill256-kv1g",
+      "pp": {
+        "mean": 197.0285265661812,
+        "std": 2.1690308093206943,
+        "values": [
+          193.96585369836725,
+          198.41130945337585,
+          198.7084165468005
+        ]
+      },
+      "started_at": "2026-09-08T06:42:24.980+00:00",
+      "tg": {
+        "mean": 13.572686150332382,
+        "std": 0.6810061310228813,
+        "values": [
+          14.334161143767407,
+          13.702605976597694,
+          12.681291330632053
+        ]
+      },
+      "ttfr": {
+        "mean": 10774.400860032378,
+        "std": 115.32876296257527,
+        "values": [
+          10937.256781035103,
+          10700.689575984143,
+          10685.256223077886
+        ]
+      }
+    },
+    {
+      "accepted": false,
+      "attempt": "speed-mtp4-kv1g",
+      "completed_at": "2026-09-08T07:02:10.845+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 4,
+        "prefill": 256,
+        "spinwait_ms": "stock"
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "error": "CalledProcessError(1, ['ssh', '-F', '/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/zima-ssh-config', 'mj-spark-1', 'bash /home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/scripts/run_speed_bench.sh mtp4-kv1g'])",
+      "label": "mtp4-kv1g",
+      "started_at": "2026-09-08T06:49:08.282+00:00"
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-decode-only-graphs",
+      "completed_at": "2026-09-08T07:10:31.066+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 0,
+        "graph_mode": "FULL_DECODE_ONLY",
+        "kv_bytes": 1073741824,
+        "mtp": 0,
+        "prefill": 128,
+        "spinwait_ms": "stock"
+      },
+      "label": "decode-only-graphs",
+      "pp": {
+        "mean": 145.50944469383305,
+        "std": 0.22632930433952467,
+        "values": [
+          145.5224079654917,
+          145.2259948356475,
+          145.77993128035988
+        ]
+      },
+      "started_at": "2026-09-08T07:02:21.468+00:00",
+      "tg": {
+        "mean": 7.51121866646604,
+        "std": 0.024010487260128555,
+        "values": [
+          7.477963912783938,
+          7.521900770743094,
+          7.533791315871089
+        ]
+      },
+      "ttfr": {
+        "mean": 14390.239190620681,
+        "std": 21.895159567095416,
+        "values": [
+          14388.95134802442,
+          14417.67589293886,
+          14364.090330898762
+        ]
+      }
+    },
+    {
+      "accepted": false,
+      "attempt": "speed-mtp-decode-only-graphs",
+      "completed_at": "2026-09-08T07:16:28.768+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 0,
+        "graph_mode": "FULL_DECODE_ONLY",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 256,
+        "spinwait_ms": "stock"
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "error": "CalledProcessError(2, ['bash', PosixPath('/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/scripts/start_candidate_cluster_attempt.sh'), '20260907T224500Z', 'GLM-5.3-EXL3-TR3-2.75bpw-TP3-K2K3-rotating-uneven-v1-assembled-20260907T210500Z', 'speed-mtp-decode-only-graphs', '4', '1048576', 'lazy', '256', 'arena', '3600', 'resident_uva', '1073741824', '20260907T231500Z-k275-mixed-rank-local-v1', 'expandable_segments:True', '16'])",
+      "label": "mtp-decode-only-graphs",
+      "started_at": "2026-09-08T07:11:02.567+00:00"
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-spinwait16",
+      "completed_at": "2026-09-08T07:22:45.781+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 256,
+        "spinwait_ms": "16"
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "label": "spinwait16",
+      "pp": {
+        "mean": 195.8655145450276,
+        "std": 2.300418788944584,
+        "values": [
+          197.948744996056,
+          196.98792405891095,
+          192.65987458011577
+        ]
+      },
+      "started_at": "2026-09-08T07:16:28.774+00:00",
+      "tg": {
+        "mean": 12.70983823591583,
+        "std": 0.5494886131869373,
+        "values": [
+          12.01272084106948,
+          12.761029975885537,
+          13.355763890792476
+        ]
+      },
+      "ttfr": {
+        "mean": 10839.909740646059,
+        "std": 123.72119286159707,
+        "values": [
+          10728.41515194159,
+          10778.878964018077,
+          11012.435105978511
+        ]
+      }
+    },
+    {
+      "accepted": false,
+      "attempt": "speed-final-confirm",
+      "completed_at": "2026-09-08T07:33:42.907+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 256,
+        "spinwait_ms": "stock"
+      },
+      "disqualified_reason": "larger-prefill MTP family excluded after repeated liveness failures; measured values retained",
+      "eligible_for_selection": false,
+      "error": "CalledProcessError(1, ['ssh', '-F', '/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/zima-ssh-config', 'mj-spark-1', 'bash /home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/scripts/run_speed_bench.sh final-confirm'])",
+      "label": "final-confirm",
+      "started_at": "2026-09-08T07:23:20.399+00:00"
+    },
+    {
+      "accepted": false,
+      "attempt": "speed-mtp3-graphs-p128",
+      "completed_at": "2026-09-08T07:44:23.081+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 0,
+        "graph_mode": "FULL_DECODE_ONLY",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 128,
+        "spinwait_ms": "stock"
+      },
+      "error": "CalledProcessError(1, ['ssh', '-F', '/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/zima-ssh-config', 'mj-spark-1', 'bash /home/mj-kang/Dev/experiment/glm53-full-exl3-tp3/scripts/run_speed_bench.sh mtp3-graphs-p128'])",
+      "label": "mtp3-graphs-p128",
+      "started_at": "2026-09-08T07:38:47.120+00:00"
+    },
+    {
+      "accepted": true,
+      "attempt": "speed-qualified-final",
+      "completed_at": "2026-09-08T07:51:16.958+00:00",
+      "config": {
+        "buffer": 1048576,
+        "channels": 4,
+        "eager": 1,
+        "graph_mode": "",
+        "kv_bytes": 1073741824,
+        "mtp": 3,
+        "prefill": 128,
+        "spinwait_ms": "stock"
+      },
+      "label": "qualified-final",
+      "pp": {
+        "mean": 142.69635607738562,
+        "std": 0.9119571768951935,
+        "values": [
+          143.87240777058608,
+          142.56677941000393,
+          141.64988105156678
+        ]
+      },
+      "started_at": "2026-09-08T07:44:58.776+00:00",
+      "tg": {
+        "mean": 13.17423189432582,
+        "std": 0.8898197234496954,
+        "values": [
+          13.57482925840921,
+          14.007040188486114,
+          11.940826236082135
+        ]
+      },
+      "ttfr": {
+        "mean": 14730.378367666466,
+        "std": 91.60628919989303,
+        "values": [
+          14612.474570982158,
+          14742.837370024063,
+          14835.823161993176
+        ]
+      }
+    }
+  ],
+  "selected": "kv1g"
+}

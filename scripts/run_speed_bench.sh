@@ -10,6 +10,12 @@ mkdir -p "$root"
 cd /home/mj-kang/Dev/benchmark/llama-benchy
 git rev-parse HEAD > "$root/benchy-commit.txt"
 git diff --stat > "$root/benchy-diff-stat.txt"
+[[ "$(git rev-parse HEAD)" == 446dd42fde2ebbaa1d68a0dfe9dc1e5b833f95ad ]] || {
+  echo 'llama-benchy revision differs from the qualified protocol' >&2; exit 2;
+}
+git diff --quiet && git diff --cached --quiet || {
+  echo 'llama-benchy tracked source is dirty; comparison refused' >&2; exit 2;
+}
 exec .venv/bin/llama-benchy --base-url http://127.0.0.1:8893/v1 \
  --model GLM-5.3-K3-TP3-CANDIDATE --tokenizer "$model" \
  --pp 2048 --tg 256 --exact-tg --depth 0 --runs 3 --concurrency 1 \
