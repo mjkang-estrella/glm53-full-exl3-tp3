@@ -1,0 +1,13 @@
+# Operator-owned configuration. Revalidate DHCP addresses and trusted host keys.
+# Copy to zima-ssh-config, then add the operator's existing identity configuration.
+Host mj-spark-1
+    HostName 192.168.0.238
+Host mj-spark-2
+    HostName 192.168.0.110
+Host mj-spark-3
+    HostName 192.168.0.234
+Host mj-spark-1 mj-spark-2 mj-spark-3
+    User mj-kang
+    BatchMode yes
+    StrictHostKeyChecking yes
+    ConnectTimeout 10

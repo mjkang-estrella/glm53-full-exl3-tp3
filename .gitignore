@@ -1,0 +1,40 @@
+# Operator state and credentials
+.env
+.env.*
+!.env.example
+zima-ssh-config
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.DS_Store
+
+# Runtime artifacts never belong in source history
+__pycache__/
+*.py[cod]
+.venv/
+outputs/
+state/
+logs/
+cache/
+models/
+*.safetensors
+*.f32
+*.npy
+*.pt
+*.jsonl
+*.csv
+*.log
+*.tmp
+*.next
+*.pre-*
+
+# Hash-pinned upstream encoder is an external dependency, not silently vendored
+encoder-r10/
+
+# Superseded Codex-process launchers remain local historical artifacts
+run-zima-codex.sh
+resume-zima-codex.sh
+render-codex-json.sh
+RESUME_PROMPT.md
+
