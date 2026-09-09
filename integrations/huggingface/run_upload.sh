@@ -11,6 +11,8 @@ export HF_XET_CHUNK_CACHE_SIZE_BYTES=0
 export HF_XET_SHARD_CACHE_SIZE_LIMIT=1073741824
 export HF_XET_HIGH_PERFORMANCE=0
 export HF_XET_NUM_CONCURRENT_RANGE_GETS=2
+export HF_HUB_DISABLE_XET=1
+export HF_HUB_DISABLE_PROGRESS_BARS=1
 export PYTHONUNBUFFERED=1
 exec /home/mj-kang/Dev/cache/hf-model-upload-20260908-venv/bin/python \
   "$project/integrations/huggingface/upload_models.py" "$@" >>"$state/upload.log" 2>&1

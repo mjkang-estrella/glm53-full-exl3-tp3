@@ -241,6 +241,67 @@ def verify_remote(api, s, stage, files):
     return complete
 
 
+def bounded_batches(files, max_files=8, max_bytes=128 * 1024**2):
+    """Large individual files stand alone and are streamed by the LFS client."""
+    batch, size = [], 0
+    for item in files:
+        if batch and (len(batch) >= max_files or size + item['bytes'] > max_bytes):
+            yield batch
+            batch, size = [], 0
+        batch.append(item)
+        size += item['bytes']
+    if batch:
+        yield batch
+
+
+def upload_bounded(api, s, stage, files, completed):
+    # Resume from verified server content, not from stale local progress files.
+    expected = {f['published']: f for f in files}
+    committed = set()
+    revision = api.repo_info(s['repo']).sha
+    for item in api.list_repo_tree(s['repo'], recursive=True, revision=revision):
+        if not isinstance(item, RepoFile) or item.path not in expected:
+            continue
+        e = expected[item.path]
+        if item.size != e['bytes']:
+            raise RuntimeError('Existing remote payload size mismatch')
+        if item.lfs:
+            actual = item.lfs.sha256 if hasattr(item.lfs, 'sha256') else item.lfs['sha256']
+            if actual != e['sha256']:
+                raise RuntimeError('Existing remote payload hash mismatch')
+        else:
+            body = (stage / item.path).read_bytes()
+            if item.blob_id != hashlib.sha1(f'blob {len(body)}\0'.encode() + body).hexdigest():
+                raise RuntimeError('Existing remote metadata hash mismatch')
+        committed.add(item.path)
+    count = len(committed)
+    committed_bytes = sum(expected[n]['bytes'] for n in committed)
+    total = sum(f['bytes'] for f in files)
+    for batch in bounded_batches([f for f in files if f['published'] not in committed]):
+        status('uploading', repo=s['repo'], transport='single-thread-lfs',
+               committed_files=count, committed_bytes=committed_bytes,
+               total_files=len(files), payload_bytes=total,
+               batch_files=len(batch), batch_bytes=sum(f['bytes'] for f in batch), completed=completed)
+        for attempt in range(5):
+            try:
+                # Fresh operations after a retry, since SDK operations are mutable.
+                api.create_commit(s['repo'], repo_type='model', num_threads=1,
+                    commit_message=f'Upload sealed payload files {count + 1}-{count + len(batch)}',
+                    operations=[CommitOperationAdd(path_in_repo=f['published'], path_or_fileobj=stage / f['published']) for f in batch])
+                break
+            except Exception as error:
+                code = getattr(getattr(error, 'response', None), 'status_code', None)
+                if code in (400, 401, 402, 403, 404, 409, 422) or attempt == 4:
+                    raise
+                status('retry_wait', repo=s['repo'], attempt=attempt + 1,
+                       http_status=code, committed_files=count, committed_bytes=committed_bytes)
+                time.sleep(min(15 * 2**attempt, 120))
+        count += len(batch)
+        committed_bytes += sum(f['bytes'] for f in batch)
+    status('payload_committed', repo=s['repo'], committed_files=count,
+           committed_bytes=committed_bytes, payload_bytes=total, completed=completed)
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--prepare-only', action='store_true')
@@ -268,8 +329,7 @@ def main():
     completed = []
     for s, stage, files in prepared:
         status('uploading', repo=s['repo'], files=len(files), payload_bytes=sum(f['bytes'] for f in files), completed=completed)
-        api.upload_large_folder(s['repo'], stage, repo_type='model', private=False,
-                                num_workers=2, print_report=True, print_report_every=60)
+        upload_bounded(api, s, stage, files, completed)
         status('verifying_remote', repo=s['repo'], completed=completed)
         verify_remote(api, s, stage, files)
         completed.append(s['repo'])

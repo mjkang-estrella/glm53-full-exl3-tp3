@@ -1,5 +1,19 @@
 # Public model upload from Zima
 
+## September 9 recovery
+
+The first 256-file streaming upload hit its 4 GiB cgroup cap after 54 minutes, with 186.62 GB of K3 committed. K2.75 had not started. The old STATUS.json survived with a stale uploading phase; the original failed scope and pre-recovery status are retained as evidence.
+
+The recovery uses explicit commits of at most eight files or 128 MiB, one LFS upload thread, and disables the Xet client for this run. A larger individual file is streamed alone. Already committed payload files are verified by remote size and content identity and skipped. Transient errors receive bounded retries; permanent authorization/quota errors stop the job. The 4 GiB memory cap and zero process swap remain unchanged.
+
+The active controller is now the `glm53-hf-recovery` tmux session and `glm53-hf-upload-recovery-20260909.scope`. `supervise_upload.py` runs outside that scope, writes PROCESS.json every 15 seconds, and changes STATUS.json to failed if the child exits or is OOM-killed. This makes failures visible; it does not automatically restart a failed upload. Current status commands:
+
+```bash
+ssh mj-zima 'cat /home/mj-kang/Dev/state/glm53-full-exl3-tp3/hf-public-20260908/PROCESS.json; cat /home/mj-kang/Dev/state/glm53-full-exl3-tp3/hf-public-20260908/STATUS.json'
+```
+
+Start future recoveries through `supervise_upload.py` inside Zima tmux, after inspecting the failure and ensuring no active controller. The original launch details below describe the first attempt and remain for audit.
+
 The operator authorized public upload under the signed-in personal Hugging Face account and required independence from the laptop. The controller runs on Zima, reads the sealed NAS checkpoints, and does not use or restart a Spark GPU.
 
 Repositories:
