@@ -6,6 +6,7 @@ Zima root storage; staging contains symlinks and publication metadata only.
 """
 import argparse
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 import hashlib
 import json
 import os
@@ -254,6 +255,26 @@ def bounded_batches(files, max_files=8, max_bytes=128 * 1024**2):
         yield batch
 
 
+def rate_limit_delay(headers, attempt, now=None):
+    """Honor the server reset; use conservative backoff when headers are absent."""
+    headers = {k.lower(): v for k, v in headers.items()}
+    delays = []
+    value = headers.get('retry-after', '')
+    try:
+        delays.append(float(value))
+    except ValueError:
+        try:
+            date = parsedate_to_datetime(value)
+            if date.tzinfo is None:
+                date = date.replace(tzinfo=timezone.utc)
+            delays.append(date.timestamp() - (time.time() if now is None else now))
+        except (ValueError, TypeError, OverflowError):
+            pass
+    delays.extend(float(x) for x in re.findall(r'(?:^|[;,])\s*t\s*=\s*(\d+)', headers.get('ratelimit', '')))
+    delays = [d for d in delays if d >= 0 and d < float('inf')]
+    return max(5, max(delays) + 5) if delays else min(600 * 2**min(attempt, 3), 3600)
+
+
 def upload_bounded(api, s, stage, files, completed):
     # Resume from verified server content, not from stale local progress files.
     expected = {f['published']: f for f in files}
@@ -277,25 +298,46 @@ def upload_bounded(api, s, stage, files, completed):
     count = len(committed)
     committed_bytes = sum(expected[n]['bytes'] for n in committed)
     total = sum(f['bytes'] for f in files)
-    for batch in bounded_batches([f for f in files if f['published'] not in committed]):
+    last_commit_started = None
+    # LFS streams one file at a time. Grouping paths into a larger commit does
+    # not enable parallel payload buffers as the old Xet folder pipeline did.
+    for batch in bounded_batches([f for f in files if f['published'] not in committed], max_files=64, max_bytes=1024**3):
+        if last_commit_started is not None:
+            wait = 60 - (time.monotonic() - last_commit_started)
+            if wait > 0:
+                status('pacing', repo=s['repo'], wait_seconds=round(wait, 1),
+                       committed_files=count, committed_bytes=committed_bytes, payload_bytes=total)
+                time.sleep(wait)
         status('uploading', repo=s['repo'], transport='single-thread-lfs',
                committed_files=count, committed_bytes=committed_bytes,
                total_files=len(files), payload_bytes=total,
                batch_files=len(batch), batch_bytes=sum(f['bytes'] for f in batch), completed=completed)
-        for attempt in range(5):
+        failures, rate_limits = 0, 0
+        while True:
             try:
+                last_commit_started = time.monotonic()
                 # Fresh operations after a retry, since SDK operations are mutable.
                 api.create_commit(s['repo'], repo_type='model', num_threads=1,
                     commit_message=f'Upload sealed payload files {count + 1}-{count + len(batch)}',
                     operations=[CommitOperationAdd(path_in_repo=f['published'], path_or_fileobj=stage / f['published']) for f in batch])
                 break
             except Exception as error:
-                code = getattr(getattr(error, 'response', None), 'status_code', None)
-                if code in (400, 401, 402, 403, 404, 409, 422) or attempt == 4:
+                response = getattr(error, 'response', None)
+                code = getattr(response, 'status_code', None)
+                if code == 429:
+                    wait = rate_limit_delay(getattr(response, 'headers', {}), rate_limits)
+                    rate_limits += 1
+                    status('rate_limit_wait', repo=s['repo'], http_status=429,
+                           wait_seconds=wait, retry_at=datetime.fromtimestamp(time.time() + wait, timezone.utc).isoformat(),
+                           committed_files=count, committed_bytes=committed_bytes, payload_bytes=total)
+                    time.sleep(wait)
+                    continue
+                failures += 1
+                if code in (400, 401, 402, 403, 404, 409, 422) or failures >= 5:
                     raise
-                status('retry_wait', repo=s['repo'], attempt=attempt + 1,
+                status('retry_wait', repo=s['repo'], attempt=failures,
                        http_status=code, committed_files=count, committed_bytes=committed_bytes)
-                time.sleep(min(15 * 2**attempt, 120))
+                time.sleep(min(15 * 2**(failures - 1), 120))
         count += len(batch)
         committed_bytes += sum(f['bytes'] for f in batch)
     status('payload_committed', repo=s['repo'], committed_files=count,
@@ -341,5 +383,10 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         # Do not emit HTTP headers, credentials or raw SDK exception details.
-        status('failed', error_type=type(e).__name__, action='Inspect sanitized logs; do not retry a permanent quota/auth error blindly')
+        previous = json.loads((ROOT / 'STATUS.json').read_text()) if (ROOT / 'STATUS.json').exists() else {}
+        status('failed', error_type=type(e).__name__,
+               http_status=getattr(getattr(e, 'response', None), 'status_code', None),
+               repo=previous.get('repo'), committed_bytes=previous.get('committed_bytes'),
+               committed_files=previous.get('committed_files'),
+               action='Inspect sanitized logs; do not retry a permanent quota/auth error blindly')
         raise SystemExit(1)

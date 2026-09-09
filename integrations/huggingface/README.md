@@ -1,5 +1,15 @@
 # Public model upload from Zima
 
+## September 9 rate-limit recovery
+
+The first LFS recovery made progress to 201.13 GB committed, then received HTTP 429. Its short retry budget expired before the limit reset. This was not another OOM event.
+
+The current job uses tmux session `glm53-hf-rate-recovery` and the same supervised recovery scope. Transfers remain single-threaded LFS with the same 4 GiB memory cap, but each commit groups up to 64 file paths or 1 GiB. Payloads are streamed sequentially, not buffered as a parallel folder upload. Commit starts are paced at least 60 seconds apart.
+
+HTTP 429 now waits for `Retry-After` or the `RateLimit` reset time. When neither is available it backs off for 10 minutes, increasing to at most one hour between attempts. STATUS.json records `rate_limit_wait` and `retry_at`, while PROCESS.json continues reporting liveness. Rate-limit waiting does not exhaust the five-attempt budget used for other transient errors. Permanent authorization/quota errors still stop without purchasing storage or changing credentials.
+
+The older attempt descriptions below remain as historical evidence. The current supervisor/status paths and completion-marker rules are unchanged.
+
 ## September 9 recovery
 
 The first 256-file streaming upload hit its 4 GiB cgroup cap after 54 minutes, with 186.62 GB of K3 committed. K2.75 had not started. The old STATUS.json survived with a stale uploading phase; the original failed scope and pre-recovery status are retained as evidence.
