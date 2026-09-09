@@ -17,3 +17,9 @@ Profile: TP2 on Spark 1/2, DFlash2 k=7/draft TP2, FP8 target KV, E3 grouped pref
 CPU checks: 41 passed; one upstream stale default assertion failed in `test_indexer_workspace.py`, which expects `stock` despite upstream now defaulting to `rightsize`. The E3 build static check and GPU overlay self-check passed. The default GPU check skips real-checkpoint parity when the HF cache is not mounted. Live validation is recorded separately and does not replace a full KLD evaluation.
 
 Private deployment receipts are under `/home/mj-kang/Dev/state/glm53-flash-e3-20260909` on Zima. Build/serve logs and per-node caches use canonical Dev/logs and Dev/cache paths. Backups include K275 inspect records and the pre-cutover LibreChat/Compose files. Never resume K275 alongside Flash on the same GPUs.
+
+## Startup blocker
+
+Neither E3 startup was promoted. The first attempt, using the upstream expandable-segment allocator, emitted NVIDIA `NV_ERR_NO_MEMORY` allocation errors on Spark 2 during model initialization. The 12GiB/strict-kernel watchdog stopped it. A second attempt using `backend:cudaMallocAsync` emitted the same class of errors on Spark 1 and was also stopped. Both peers were intentionally stopped; neither attempt was reported as host-OOMKilled. After shutdown, both nodes were responsive with about 117GiB available and no remaining GPU compute processes.
+
+Buddy allocator statistics showed very few highest-order free blocks despite abundant total free memory, consistent with fragmentation but not definitive proof of the cause. Host memory compaction or a clean reboot requires operator authorization/privilege. The web configuration has not been switched: it still targets the stopped K275 endpoint and is temporarily unavailable. The prepared E3 image, cached weights, all rollback containers and Zima upload jobs are preserved. Do not weaken the kernel guard or describe Flash as deployed before a successful boot and real generation checks.
