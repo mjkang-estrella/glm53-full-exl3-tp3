@@ -1,0 +1,57 @@
+{
+  "schema": "glm53.public-model-release.v1",
+  "status": "both_verified_complete",
+  "models": [
+    {
+      "repo_id": "mj-kang/GLM-5.3-EXL3-3.0bpw-TP3",
+      "url": "https://huggingface.co/mj-kang/GLM-5.3-EXL3-3.0bpw-TP3",
+      "public": true,
+      "download_revision": "814a5ae9668af03d90131d9c6e35b6f6021fee5b",
+      "completion_marker_sha256": "9e562af23fcbd10ccacadaa109c57e3607d3cc8a35f754dfb83c56b8249472fc",
+      "receipt": {
+        "job": "glm53-sealed-public-20260908-v1",
+        "payload_bytes": 315867635438,
+        "payload_files": 19559,
+        "source_manifest_sha256": "de425ecadfba3b1fa7f60a500c9e156622830454ffad809a1f559dde020f2999",
+        "transport_manifest_sha256": "d764082e3e8bf12bdc35f8d345a64aef3fc3eafe599c39f93175bb1954d7854e",
+        "verified_at": "2026-09-09T20:43:31.043362+00:00",
+        "verified_files": 19565,
+        "verified_payload_revision": "87b432d04b88b2d429b88cc2f97597996f8f19cb"
+      },
+      "completion_revision": "99cdcf275a7fa7e11f58bc61c9f91491baba25ef",
+      "base_model": "zai-org/GLM-5.3-BF16",
+      "base_model_relation": "quantized",
+      "model_card_sha256": "6d39e8ccda4997eeaa024f1f46d164faae0973b4fa9d93202f7265bf74d8b67b"
+    },
+    {
+      "repo_id": "mj-kang/GLM-5.3-EXL3-2.75bpw-TP3",
+      "url": "https://huggingface.co/mj-kang/GLM-5.3-EXL3-2.75bpw-TP3",
+      "public": true,
+      "download_revision": "a266e4e8b9f9967d395ab8276283cbd5e8452402",
+      "completion_marker_sha256": "82c73c98102b143059479e77999cf4bf86cb81614e5053c935b9222f9eb8cc8c",
+      "receipt": {
+        "job": "glm53-sealed-public-20260908-v1",
+        "payload_bytes": 292916229281,
+        "payload_files": 19712,
+        "published_attributes_sha256": "fce01d921b33d9489da666b8f3315d58f39dbbbfb30356b28aebff8994d93682",
+        "published_lfs_rules": [
+          "*.safetensors",
+          "checkpoint/part-0038/19705-model.safetensors.index.json",
+          "checkpoint/part-0038/19708-source-tensor-plan.json",
+          "checkpoint/part-0038/19709-tier-map.json",
+          "checkpoint/part-0038/19710-tokenizer.json"
+        ],
+        "source_manifest_sha256": "d0384bfd53e403b859e8a221b0429725b22600d48d49f2ada2cf8a0f777332c6",
+        "transport_manifest_sha256": "f633d6eedd887e082521b70a507dace0718749afb4d6a89d10f5dda73b299e13",
+        "verified_at": "2026-09-10T04:56:53.371221+00:00",
+        "verified_files": 19718,
+        "verified_payload_revision": "ef319e5fe2ab1c1f8d7d551963ed7e6148ea53ab"
+      },
+      "completion_revision": "c156265b304946f3ae5c49aae1ea6b65d4d4bc16",
+      "base_model": "zai-org/GLM-5.3-BF16",
+      "base_model_relation": "quantized",
+      "model_card_sha256": "626c18c483d08b6f5b31627f44e0c2163afc365eb5cb0e5da5bcf793c4104553"
+    }
+  ],
+  "note": "Download revisions include the corrected quantization model cards. Completion receipts retain the original payload verification revisions; weight payloads are unchanged."
+}

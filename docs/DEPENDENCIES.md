@@ -2,6 +2,8 @@
 
 All paths are canonical lab paths. Zima is the always-on controller, not a GPU or model-weight staging disk. Verify `/home/mj-kang/Dev/README.md` and current SSH/routing before changes.
 
+Both sealed checkpoints are now available as verified public Hugging Face releases. See [DOWNLOADS.md](DOWNLOADS.md) for pinned completed revisions and the required lossless layout restoration. NAS access is no longer required to obtain the checkpoint bytes; runtime images, compiled extensions and other lab-specific dependencies below remain separate.
+
 | Input | Pinned identity / location |
 |---|---|
 | Runtime image, all Sparks | `glm53-exl3:e2-c190db1`; local image ID `sha256:b7ff496564001ee02655ce796370bf823a233a963f04c3d334a549bb5f0628e5` |

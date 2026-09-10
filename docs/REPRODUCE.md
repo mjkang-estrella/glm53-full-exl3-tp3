@@ -13,6 +13,8 @@ python3 scripts/verify_reproduction.py
 
 Check [dependencies](DEPENDENCIES.md). Hydrate the external encoder only if needed. The source audit checks syntax, safety regressions and recorded numerical invariants; it does not simulate CUDA or remeasure throughput.
 
+To obtain either sealed checkpoint without access to the private NAS, use the verified public revisions in [DOWNLOADS.md](DOWNLOADS.md) and restore their original layout first. No re-encoding is needed. Public model availability does not supply the pinned runtime image or replace the existing-lab preflight requirements.
+
 On Zima, from `/home/mj-kang/Dev/experiment/glm53-full-exl3-tp3`:
 
 ```bash

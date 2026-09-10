@@ -2,7 +2,11 @@
 
 ## Completed September 10
 
+Both model cards now explicitly declare `base_model_relation: quantized`, state that no additional language-model fine-tuning was performed, and omit the obsolete incomplete-upload banner. The generator uses the same metadata; completion markers and all original weight payloads are unchanged.
+
 Both public repositories now contain verified `UPLOAD_COMPLETE.json` markers. K3 contains 19,559 payload files / 315,867,635,438 bytes. K2.75 contains 19,712 payload files / 292,916,229,281 bytes.
+
+Start with [pinned download and restore instructions](../../docs/DOWNLOADS.md). The [publication registry](../../results/model-publication.json) records both completed revisions and their original completion receipts. No upload controller needs restarting.
 
 K2.75 finished transferring its payload but the original finalizer rejected its root `.gitattributes`: the upload added four exact-path LFS rules for large JSON files. The new verifier accepts only standard LFS directives for explicitly expected file paths, plus the original safetensors rule. It still verifies every payload size and content identity. It validates the attributes at the same pinned revision as the payload and records their SHA256 and rules in the receipt. Publishing the completion marker uses a parent-commit guard to reject concurrent repository changes.
 
@@ -14,7 +18,7 @@ The attempt history below remains for audit. Do not restart the uploader just be
 
 The first LFS recovery made progress to 201.13 GB committed, then received HTTP 429. Its short retry budget expired before the limit reset. This was not another OOM event.
 
-The current job uses tmux session `glm53-hf-rate-recovery` and the same supervised recovery scope. Transfers remain single-threaded LFS with the same 4 GiB memory cap, but each commit groups up to 64 file paths or 1 GiB. Payloads are streamed sequentially, not buffered as a parallel folder upload. Commit starts are paced at least 60 seconds apart.
+That recovery used tmux session `glm53-hf-rate-recovery` and the same supervised recovery scope. Transfers remain single-threaded LFS with the same 4 GiB memory cap, but each commit groups up to 64 file paths or 1 GiB. Payloads are streamed sequentially, not buffered as a parallel folder upload. Commit starts are paced at least 60 seconds apart.
 
 HTTP 429 now waits for `Retry-After` or the `RateLimit` reset time. When neither is available it backs off for 10 minutes, increasing to at most one hour between attempts. STATUS.json records `rate_limit_wait` and `retry_at`, while PROCESS.json continues reporting liveness. Rate-limit waiting does not exhaust the five-attempt budget used for other transient errors. Permanent authorization/quota errors still stop without purchasing storage or changing credentials.
 
@@ -26,7 +30,7 @@ The first 256-file streaming upload hit its 4 GiB cgroup cap after 54 minutes, w
 
 The recovery uses explicit commits of at most eight files or 128 MiB, one LFS upload thread, and disables the Xet client for this run. A larger individual file is streamed alone. Already committed payload files are verified by remote size and content identity and skipped. Transient errors receive bounded retries; permanent authorization/quota errors stop the job. The 4 GiB memory cap and zero process swap remain unchanged.
 
-The active controller is now the `glm53-hf-recovery` tmux session and `glm53-hf-upload-recovery-20260909.scope`. `supervise_upload.py` runs outside that scope, writes PROCESS.json every 15 seconds, and changes STATUS.json to failed if the child exits or is OOM-killed. This makes failures visible; it does not automatically restart a failed upload. Current status commands:
+That recovery used the `glm53-hf-recovery` tmux session and `glm53-hf-upload-recovery-20260909.scope`. `supervise_upload.py` runs outside that scope, writes PROCESS.json every 15 seconds, and changes STATUS.json to failed if the child exits or is OOM-killed. This makes failures visible; it does not automatically restart a failed upload. Current status commands:
 
 ```bash
 ssh mj-zima 'cat /home/mj-kang/Dev/state/glm53-full-exl3-tp3/hf-public-20260908/PROCESS.json; cat /home/mj-kang/Dev/state/glm53-full-exl3-tp3/hf-public-20260908/STATUS.json'
@@ -41,9 +45,9 @@ Repositories:
 - `mj-kang/GLM-5.3-EXL3-3.0bpw-TP3`
 - `mj-kang/GLM-5.3-EXL3-2.75bpw-TP3`
 
-They are **incomplete until each repository contains `UPLOAD_COMPLETE.json`**. K3 uploads first, then K2.75. Do not infer completion from an existing repository or model card.
+Both repositories now contain their completion markers. K3 was uploaded first, then K2.75. For future revisions, validate the marker rather than inferring completion from the existence of a repository or card.
 
-## Controller and resource limits
+## Original controller and resource limits
 
 - Zima tmux session: `glm53-hf-upload`.
 - User systemd scope: `glm53-hf-upload-20260908.scope`.
@@ -77,9 +81,9 @@ The models have more than 19,000 files in the original top-level layout, above t
 
 Before upload, the controller validates the pinned source manifest/ledger/assembly marker, all file sizes and all non-weight metadata hashes, and scans metadata for common credential patterns. The earlier full NAS audit remains the source weight-integrity evidence. After transfer it checks every remote file's size and LFS SHA256, or Git blob identity for non-LFS files, before writing the completion marker. No new KLD or serving claim is inferred from publication.
 
-## Start or resume deliberately
+## Starting a future upload
 
-First verify no controller is running and inspect STATUS.json/logs for any previous failure. The launcher takes an exclusive flock to prevent duplicate controllers. Run on Zima inside tmux, from the canonical `-repro` checkout:
+These two releases need no further upload. For an explicitly authorized future upload, first verify no controller is running and inspect STATUS.json/logs for any previous failure. The launcher takes an exclusive flock to prevent duplicate controllers. Run on Zima inside tmux, from the canonical `-repro` checkout:
 
 ```bash
 systemd-run --user --scope --unit=glm53-hf-upload-20260908 \
