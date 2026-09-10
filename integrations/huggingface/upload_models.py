@@ -85,6 +85,7 @@ license: other
 license_name: glm-5.3
 license_link: LICENSE
 base_model: zai-org/GLM-5.3-BF16
+base_model_relation: quantized
 pipeline_tag: text-generation
 tags:
 - exl3
@@ -94,9 +95,7 @@ tags:
 ---
 # GLM-5.3 EXL3 {s['bits']} bpw, TP3 rotating uneven
 
-**Upload status: incomplete unless `UPLOAD_COMPLETE.json` exists.** Check that marker before downloading for use.
-
-This is a community quantization of the full GLM-5.3, not GLM-5.3 Flash. It retains all 256 routed experts and official top-8 routing, including the MTP layer. The named bpw is the routed-expert quantization target, not the whole-checkpoint average; passthrough tensors remain at source precision.
+This is an EXL3/TR3 weight-quantized version of the full GLM-5.3 BF16 checkpoint, not GLM-5.3 Flash. It is not a fine-tune; no additional language-model fine-tuning was performed. It retains all 256 routed experts and official top-8 routing, including the MTP layer. The named bpw is the routed-expert quantization target, not the whole-checkpoint average; passthrough tensors remain at source precision.
 
 Geometry is rotating uneven 768/640/640 with no expert-channel padding. The 768-wide owner rotates across normal MoE layers; MTP layer 78 uses rank 2. K3 uses three-bit routed experts; K2.75 mixes 64 two-bit and 192 three-bit experts per routed layer. These are the original sealed versions, not the rejected scale/re-encoding experiments.
 
