@@ -200,12 +200,37 @@ def initialize(api, s, stage):
         operations=[CommitOperationAdd(path_in_repo=name, path_or_fileobj=stage / name) for name in roots])
 
 
+def validate_hub_attributes(body, expected_paths):
+    """Allow only standard LFS rules for the payload, including Hub-added JSON rules."""
+    rules = []
+    for line in body.decode('utf-8').splitlines():
+        if not line.strip():
+            continue
+        parts = line.split()
+        if len(parts) != 5 or parts[1:] != ['filter=lfs', 'diff=lfs', 'merge=lfs', '-text']:
+            raise RuntimeError('Unexpected Git attributes directive')
+        name = parts[0]
+        if name != '*.safetensors' and name not in expected_paths:
+            raise RuntimeError('Git attributes rule targets an unexpected path')
+        if name in rules:
+            raise RuntimeError('Duplicate Git attributes rule')
+        rules.append(name)
+    if '*.safetensors' not in rules:
+        raise RuntimeError('Missing safetensors LFS rule')
+    return rules
+
+
 def verify_remote(api, s, stage, files):
     revision = api.repo_info(s['repo']).sha
     expected = {f['published']: f for f in files}
     for name in ('README.md', 'LICENSE', 'restore_checkpoint.py', 'TRANSPORT_MANIFEST.json', 'UPLOAD_PLAN.json', '.gitattributes'):
         path = stage / name
         expected[name] = dict(bytes=path.stat().st_size, sha256=sha(path))
+    # The Hub may append exact-path LFS rules while uploading large JSON files.
+    # Validate those rules at the same immutable revision as all content checks.
+    attributes = Path(hf_hub_download(s['repo'], '.gitattributes', revision=revision)).read_bytes()
+    attribute_rules = validate_hub_attributes(attributes, set(expected))
+    expected['.gitattributes'] = dict(bytes=len(attributes), sha256=hashlib.sha256(attributes).hexdigest())
     seen = set()
     for item in api.list_repo_tree(s['repo'], recursive=True, revision=revision, repo_type='model'):
         if not isinstance(item, RepoFile):
@@ -223,7 +248,7 @@ def verify_remote(api, s, stage, files):
             if remote_sha != e['sha256']:
                 raise RuntimeError(f'Remote SHA256 mismatch: {name}')
         else:
-            body = (stage / name).read_bytes()
+            body = attributes if name == '.gitattributes' else (stage / name).read_bytes()
             git_sha = hashlib.sha1(f'blob {len(body)}\0'.encode() + body).hexdigest()
             if item.blob_id != git_sha:
                 raise RuntimeError(f'Remote Git blob mismatch: {name}')
@@ -234,11 +259,14 @@ def verify_remote(api, s, stage, files):
                     verified_files=len(seen), payload_files=len(files),
                     payload_bytes=sum(f['bytes'] for f in files),
                     transport_manifest_sha256=sha(stage / 'TRANSPORT_MANIFEST.json'),
-                    source_manifest_sha256=s['manifest'])
+                    source_manifest_sha256=s['manifest'],
+                    published_attributes_sha256=hashlib.sha256(attributes).hexdigest(),
+                    published_lfs_rules=attribute_rules)
     receipt = ROOT / f'{s["key"]}-COMPLETE.json'
     dump(receipt, complete)
-    api.upload_file(repo_id=s['repo'], path_in_repo='UPLOAD_COMPLETE.json', path_or_fileobj=receipt,
-                    commit_message='Mark upload complete after remote content verification')
+    api.create_commit(s['repo'], repo_type='model', parent_commit=revision,
+        operations=[CommitOperationAdd(path_in_repo='UPLOAD_COMPLETE.json', path_or_fileobj=receipt)],
+        commit_message='Mark upload complete after remote content verification')
     return complete
 
 

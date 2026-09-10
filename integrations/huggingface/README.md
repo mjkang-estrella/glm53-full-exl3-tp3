@@ -1,5 +1,15 @@
 # Public model upload from Zima
 
+## Completed September 10
+
+Both public repositories now contain verified `UPLOAD_COMPLETE.json` markers. K3 contains 19,559 payload files / 315,867,635,438 bytes. K2.75 contains 19,712 payload files / 292,916,229,281 bytes.
+
+K2.75 finished transferring its payload but the original finalizer rejected its root `.gitattributes`: the upload added four exact-path LFS rules for large JSON files. The new verifier accepts only standard LFS directives for explicitly expected file paths, plus the original safetensors rule. It still verifies every payload size and content identity. It validates the attributes at the same pinned revision as the payload and records their SHA256 and rules in the receipt. Publishing the completion marker uses a parent-commit guard to reject concurrent repository changes.
+
+K2.75 final verification passed at `2026-09-10T04:56:53Z` against payload revision `ef319e5fe2ab1c1f8d7d551963ed7e6148ea53ab`: all 19,718 expected payload/publication files passed. No weights were re-uploaded or changed. The historical failed controller record is retained; the canonical STATUS.json now records completion after explicit finalization. Three new tests cover valid upload-generated rules, unknown paths/wildcards, changed filters and missing/duplicate base rules.
+
+The attempt history below remains for audit. Do not restart the uploader just because an old process receipt records its earlier finalization failure.
+
 ## September 9 rate-limit recovery
 
 The first LFS recovery made progress to 201.13 GB committed, then received HTTP 429. Its short retry budget expired before the limit reset. This was not another OOM event.
